@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.prjcadcliente.dominio.Cliente;
@@ -159,7 +160,48 @@ String msg = "";
 	}
 	
 	public List<Cliente> PesquisarPorNome(String nome){
-		return null;
+		
+		List<Cliente> lista = new ArrayList<Cliente>();
+		
+		try {
+			//carregar o drive de comunicação com o banco de dados 
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			
+			//Chamar o gerenciador de driver 
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3307/clientedb","root","");
+			
+			//vamos criar a consulta para selecionar os clientes por nome
+			String consulta = "Select * from tbcliente where nome=?";
+			
+			pst = con.prepareStatement(consulta);
+			
+			pst.setString(1,nome);
+			
+			//Vamos execultar a consulta e guardar o resultado na variável rs
+			rs = pst.executeQuery();
+			
+			/*
+			 * Vamos pegar um cliente por vez que está no rs e adiciona-lo 
+			 * a lista de clientes para, então retorna-la
+			 */
+			while(rs.next()) {
+				lista.add(new Cliente(
+						rs.getInt(0),rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4)));
+			}//Fim do while
+			
+		}//Fim do try
+		
+		catch(SQLException ex) {
+			ex.printStackTrace();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {con.close();} catch(Exception e) {e.printStackTrace();}
+		}
+		
+		return lista;
 	}
 	
 	public List<Cliente> PesquisarPorId(int id){
