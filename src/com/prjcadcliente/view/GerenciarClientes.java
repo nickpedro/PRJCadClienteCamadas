@@ -140,13 +140,8 @@ public class GerenciarClientes extends JFrame {
 		
 		String[] colunas = {"Id","Nome","Email","Telefone","Idade"};
 		
-		Object[][] dados = {
-				{15,"Roberto","roberto@gmail.com","11",35},
-				{21,"Pedro","pedro@gmail.com","11",19},
-				{55,"Bruna","bruna@gmail.com","11",18},
-				{95,"Lorena","Lorena@gmail.com","11",18}
-				
-		};
+		Object[][] dados = crud.PesquisarTodos().toArray(new Object[][] {});
+		
 		//Vamos construir o modelo de dados para exibir na tabela
 		DefaultTableModel modelo = new DefaultTableModel(dados,colunas);
 		
